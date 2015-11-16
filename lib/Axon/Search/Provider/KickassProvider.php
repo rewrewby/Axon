@@ -72,7 +72,7 @@ class KickassProvider extends AbstractProvider
         $crawler = new Crawler(gzdecode($rawResponse));
 
         return $crawler->filter('tr[id^="torrent_"]')->each(function ($node) {
-            $magnet = $node->filter('a.imagnet')->attr('href');
+            $magnet = $node->filter('.ka-magnet')->parents()->attr('href');
             preg_match('/btih:([0-9A-Za-z]+)&/', $magnet, $matches);
             $hash = $matches[1];
 
@@ -85,6 +85,7 @@ class KickassProvider extends AbstractProvider
             $torrent = new Torrent();
             $torrent->setName($node->filter('a.cellMainLink')->text());
             $torrent->setHash($hash);
+            $torrent->setMagnet($magnet);
             $torrent->setSize($converter->from($unit)->to('B'));
             $torrent->setSeeds($node->filter('td.green')->text());
             $torrent->setPeers($node->filter('td.red')->text());

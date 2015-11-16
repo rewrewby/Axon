@@ -13,7 +13,7 @@ class PirateBayProvider extends AbstractProvider
     /**
      * @var string
      */
-    const DEFAULT_HOST = 'thepiratebay.se';
+    const DEFAULT_HOST = 'thepiratebay.la';
 
     /**
      * @var string
@@ -85,6 +85,7 @@ class PirateBayProvider extends AbstractProvider
             $torrent = new Torrent();
             $torrent->setName($node->filter('a.detLink')->text());
             $torrent->setHash($hash);
+            $torrent->setMagnet($magnet);
             $torrent->setSize($converter->from($unit)->to('B'));
             $torrent->setSeeds($node->filter('td[align="right"]')->first()->text());
             $torrent->setPeers($node->filter('td[align="right"]')->last()->text());

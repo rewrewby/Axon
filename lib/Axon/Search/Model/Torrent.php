@@ -34,6 +34,49 @@ class Torrent
     protected $peers;
 
     /**
+     * @var string
+     */
+    protected $url;
+
+
+    /**
+     * @var string
+     */
+    protected $magnet;
+
+    /**
+     * @return string
+     */
+    public function getMagnet()
+    {
+        return $this->magnet;
+    }
+
+    /**
+     * @param string $magnet
+     */
+    public function setMagnet($magnet)
+    {
+        $this->magnet = $magnet;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+
+    /**
      * @param string $name
      */
     public function setName($name)
