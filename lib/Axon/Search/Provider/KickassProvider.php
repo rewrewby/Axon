@@ -13,7 +13,7 @@ class KickassProvider extends AbstractProvider
     /**
      * @var string
      */
-    const DEFAULT_HOST = 'kickass.to';
+    const DEFAULT_HOST = 'kat.cr';
 
     /**
      * @var string
