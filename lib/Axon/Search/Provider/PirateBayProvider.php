@@ -86,6 +86,9 @@ class PirateBayProvider extends AbstractProvider
             $torrent->setName($node->filter('a.detLink')->text());
             $torrent->setHash($hash);
             $torrent->setMagnet($magnet);
+            if($unit == 'KB'){
+                $unit = 'kB';
+            }
             $torrent->setSize($converter->from($unit)->to('B'));
             $torrent->setSeeds($node->filter('td[align="right"]')->first()->text());
             $torrent->setPeers($node->filter('td[align="right"]')->last()->text());
