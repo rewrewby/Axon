@@ -21,7 +21,8 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function __construct(Browser $browser = null)
     {
-        $this->browser = $browser ?: new Browser();
+        $client = new \Buzz\Client\Curl();
+        $this->browser = $browser ?: new Browser($client);
     }
 
     /**
