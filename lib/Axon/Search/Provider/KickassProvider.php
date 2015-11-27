@@ -86,6 +86,9 @@ class KickassProvider extends AbstractProvider
             $torrent->setName($node->filter('a.cellMainLink')->text());
             $torrent->setHash($hash);
             $torrent->setMagnet($magnet);
+            if($unit == 'KB'){
+                $unit = 'kB';
+            }
             $torrent->setSize($converter->from($unit)->to('B'));
             $torrent->setSeeds($node->filter('td.green')->text());
             $torrent->setPeers($node->filter('td.red')->text());
