@@ -13,7 +13,7 @@ class PirateBayProvider extends AbstractProvider
     /**
      * @var string
      */
-    const DEFAULT_HOST = 'thepiratebay.la';
+    const DEFAULT_HOST = 'thepiratebay.se';
 
     /**
      * @var string
