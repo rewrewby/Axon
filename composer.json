@@ -1,5 +1,5 @@
 {
-    "name": "doubleyo/axon",
+    "name": "kleiram/axon",
     "description": "Easy torrent search engine using multiple torrent sites",
     "keywords": ["kickass", "piratebay", "torrent", "download"],
     "type": "library",
