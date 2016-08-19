@@ -23,6 +23,7 @@ abstract class AbstractProvider implements ProviderInterface
     {
         $client = new \Buzz\Client\Curl();
         $this->browser = $browser ?: new Browser($client);
+        $this->browser->getClient()->setTimeout(30);
     }
 
     /**
