@@ -47,11 +47,18 @@ class TorrentProjectProvider extends AbstractProvider
      */
     public function getUrl($query, $page = null)
     {
+        if (!is_integer($page)) {
+            $page = 1;
+        }
+        $num_by_page = 20;
+
         $url = sprintf(
-            'http://%s%s/?s=%s&orderby=seeders&out=json',
+            'http://%s%s/?s=%s&orderby=seeders&num=%d&start=%d',
             self::DEFAULT_HOST,
             self::DEFAULT_PATH,
-            rawurlencode($query)
+            rawurlencode($query),
+            $num_by_page,
+            ($page * $num_by_page) - $num_by_page
         );
 
         return $url;
@@ -65,31 +72,32 @@ class TorrentProjectProvider extends AbstractProvider
      */
     protected function transformResponse($rawResponse)
     {
-        if (!($stdClass = json_decode($rawResponse))) {
-            throw new UnexpectedResponseException(
-                'Could not parse response'
-            );
-        }
-        if (isset($stdClass->error)) {
-            throw new UnexpectedResponseException(
-                sprintf(
-                    '%s : %s %s',
-                    $this->getName(),
-                    $stdClass->error,
-                    $stdClass->reason
-                )
-            );
-        }
+        $crawler = new Crawler($rawResponse);
 
-        return array_map(function ($result) {
+        return $crawler->filter('#ires .torrent')->each(function ($node) {
+            $link = $node->filter('h3 a');
+            $magnet = $link->attr('href');
+            preg_match('/\/([0-9A-Za-z]+)\//', $magnet, $matches);
+            $hash = $matches[1];
+
+            $detDesc = $node->filter('.torrent-size')->text();
+
+            preg_match('/([0-9\.]+)/', $detDesc, $matches);
+            $size = $matches[1];
+
+            preg_match('/([A-Za-z]+)/', $detDesc, $matches);
+            $unit = strtoupper($matches[1]);
+            $unit = ($unit == 'KB') ? 'kB' : $unit;
+
+            $converter = new Nomnom($size);
             $torrent = new Torrent();
-            $torrent->setName($result->name);
-            $torrent->setHash($result->hash);
-            $torrent->setSize($result->size);
-            $torrent->setSeeds($result->seeds);
-            $torrent->setPeers($result->peers);
+            $torrent->setName($link->text());
+            $torrent->setHash($hash);
+            $torrent->setSize($converter->from($unit)->to('B'));
+            $torrent->setSeeds($node->filter('.seeders b')->text());
+            $torrent->setPeers($node->filter('.leechers b')->text());
 
             return $torrent;
-        }, $stdClass);
+        });
     }
 }
