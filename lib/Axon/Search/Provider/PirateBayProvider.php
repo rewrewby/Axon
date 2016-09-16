@@ -13,7 +13,13 @@ class PirateBayProvider extends AbstractProvider
     /**
      * @var string
      */
-    const DEFAULT_HOST = 'thepiratebay.se';
+
+//    const DEFAULT_HOST = 'thepiratebay.se';
+    const DEFAULT_HOST = 'ahoy.one';
+//    const DEFAULT_HOST = 'pirateproxy.red';
+//    const DEFAULT_HOST = 'thepiratebay.lu';
+//    const DEFAULT_HOST = 'pirateportal.xyz';
+
 
     /**
      * @var string
