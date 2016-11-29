@@ -60,7 +60,7 @@ class PirateBayProvider extends AbstractProvider
         }
 
         return sprintf(
-            'http://%s%s/%s/%d/7/0',
+            'https://%s%s/%s/%d/7/0',
             $this->DEFAULT_HOST,
             self::DEFAULT_PATH,
             rawurlencode($query),
