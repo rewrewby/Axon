@@ -11,7 +11,7 @@ use Axon\Search\Exception\UnexpectedResponseException;
 /**
  * @author Ramon Kleiss <ramonkleiss@gmail.com>
  */
-class EztvProvider implements ProviderInterface
+class EztvProvider extends AbstractProvider
 {
     /**
      * @var string
@@ -22,21 +22,6 @@ class EztvProvider implements ProviderInterface
      * @var string
      */
     const DEFAULT_PATH = '/search';
-
-    /**
-     * @var Browser
-     */
-    protected $browser;
-
-    /**
-     * Constructor
-     *
-     * @param Browser $browser
-     */
-    public function __construct(Browser $browser = null)
-    {
-        $this->browser = $browser ?: new Browser();
-    }
 
     /**
      * {@inheritDoc}
@@ -55,40 +40,21 @@ class EztvProvider implements ProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Generate the url for a search query
+     *
+     * @param string       $query
+     * @param integer|null $page
      */
-    public function search($query, $page = null)
+    public function getUrl($query, $page = null)
     {
-        try {
-            $response = $this->browser->post(
-                $this->getUrl(),
-                array(),
-                $this->getQuery($query)
-            );
-        } catch (\Exception $e) {
-            throw new ConnectionException(sprintf(
-                'Could not connect to "%s"',
-                $this->getUrl()
-            ), 0, $e);
-        }
+        $url = sprintf(
+            'http://%s%s/%s',
+            self::DEFAULT_HOST,
+            self::DEFAULT_PATH,
+            rawurlencode($query)
+        );
 
-        if ($response->getStatusCode() != 200) {
-            throw new UnexpectedResponseException(sprintf(
-                'Unexpected response: %s (%d)',
-                $response->getReasonPhrase(),
-                $response->getStatusCode()
-            ));
-        }
-
-        return $this->transformResponse($response->getContent());
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return sprintf('http://%s%s/', self::DEFAULT_HOST, self::DEFAULT_PATH);
+        return $url;
     }
 
     /**
@@ -105,10 +71,14 @@ class EztvProvider implements ProviderInterface
             preg_match('/btih:([0-9A-Za-z]+)&/', $magnet, $matches);
             $hash = $matches[1];
 
-            $size = $node->filter('a.epinfo')->attr('title');
-            preg_match('/\(([0-9\.]+) ([A-Za-z]+)\)/', $size, $matches);
-            $size = $matches[1];
-            $unit = $matches[2];
+            $infoTitle = $node->filter('a.epinfo')->attr('title');
+
+            preg_match('/\(([0-9\.]+) ([A-Za-z]+)\)/', $infoTitle, $matches);
+            $size = 0; $unit = 'KB';
+            if (isset($matches[1]) && isset($matches[2])) {
+                $size = $matches[1];
+                $unit = $matches[2];
+            }
 
             $converter = new Nomnom($size);
 
@@ -119,19 +89,5 @@ class EztvProvider implements ProviderInterface
 
             return $torrent;
         });
-    }
-
-    /**
-     * @param string $query
-     *
-     * @return string
-     */
-    protected function getQuery($query)
-    {
-        return http_build_query(array(
-            'SearchString'  => $query,
-            'SearchString1' => null,
-            'search'        => 'Search'
-        ));
     }
 }

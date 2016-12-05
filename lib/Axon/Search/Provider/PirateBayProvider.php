@@ -1,6 +1,7 @@
 <?php
 namespace Axon\Search\Provider;
 
+use Buzz\Browser;
 use Nomnom\Nomnom;
 use Symfony\Component\DomCrawler\Crawler;
 use Axon\Search\Model\Torrent;
@@ -13,12 +14,22 @@ class PirateBayProvider extends AbstractProvider
     /**
      * @var string
      */
-    const DEFAULT_HOST = 'thepiratebay.se';
+
+    private $DEFAULT_HOST = 'thepiratebay.se';
 
     /**
      * @var string
      */
     const DEFAULT_PATH = '/search';
+
+    /**
+     * PirateBayProvider constructor.
+     */
+    public function __construct(Browser $browser = null, $host = null)
+    {
+        if (null != $host) $this->DEFAULT_HOST = $host;
+        parent::__construct($browser);
+    }
 
     /**
      * {@inheritDoc}
@@ -49,8 +60,8 @@ class PirateBayProvider extends AbstractProvider
         }
 
         return sprintf(
-            'http://%s%s/%s/%d/7/0',
-            self::DEFAULT_HOST,
+            'https://%s%s/%s/%d/7/0',
+            $this->DEFAULT_HOST,
             self::DEFAULT_PATH,
             rawurlencode($query),
             ($page - 1)

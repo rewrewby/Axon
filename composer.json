@@ -1,5 +1,5 @@
 {
-    "name": "rewrewby/axon",
+    "name": "kleiram/axon",
     "description": "Easy torrent search engine using multiple torrent sites",
     "keywords": ["kickass", "piratebay", "torrent", "download"],
     "type": "library",
@@ -11,12 +11,12 @@
             }
     ],
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.5.9",
         "kriswallsmith/buzz": "~0.15",
-        "symfony/property-access": "~2.4",
-        "symfony/dom-crawler": "~2.4",
-        "symfony/css-selector": "~3.0",
-        "brianium/nomnom": "~1.0"
+        "symfony/property-access": "~3.1",
+        "symfony/dom-crawler": "~3.1",
+        "symfony/css-selector": "~3.1",
+        "brianium/nomnom": "~1.1"
     },
     "autoload": {
         "psr-0": {
