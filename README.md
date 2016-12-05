@@ -30,10 +30,9 @@ The following code is an example of how to use Axon:
 $axon = new Axon\Search();
 
 // Add a couple of providers to the stack
-$axon->registerProvider(new Axon\Search\Provider\YifyProvider());
-$axon->registerProvider(new Axon\Search\Provider\KickassProvider());
+$axon->registerProvider(new Axon\Search\Provider\ExtraTorrentProvider());
 $axon->registerProvider(new Axon\Search\Provider\PirateBayProvider());
-$axon->registerProvider(new Axon\Search\Provider\EztvProvider());
+$axon->registerProvider(new Axon\Search\Provider\PirateBayProvider(null, 'pirateproxy.vip'));
 
 // Start searching!
 $torrents = $axon->search('Iron Man 3');
@@ -49,10 +48,8 @@ directory for more providers.
 
 Currently, the following tracker sites are supported:
 
- - [YIFY Torrents](https://github.com/kleiram/axon/blob/master/lib/Axon/Search/Provider/YifyProvider.php)
- - [Kickass Torrents](https://github.com/kleiram/axon/blob/master/lib/Axon/Search/Provider/KickassProvider.php)
+ - [Extra Torrent](https://github.com/kleiram/axon/blob/master/lib/Axon/Search/Provider/ExtraTorrentProvider.php)
  - [The Pirate Bay](https://github.com/kleiram/axon/blob/master/lib/Axon/Search/Provider/PirateBayProvider.php)
- - [EZTV](https://github.com/kleiram/axon/blob/master/lib/Axon/Search/Provider/EztvProvider.php)
  - And working on more!
 
 ## Changelog
